@@ -4,6 +4,7 @@ import com.blaqboxdev.unsplash.Models.Photo;
 import com.blaqboxdev.unsplash.Repositories.PhotoRepo;
 import com.blaqboxdev.unsplash.Repositories.PhotoRepositoryCustom;
 import com.blaqboxdev.unsplash.Repositories.SearchRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -13,8 +14,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
+@RequiredArgsConstructor
+
 @CrossOrigin(origins = "http://localhost:3000/", maxAge = 36000)
 @RestController
+@RequestMapping("/api")
 public class PhotoController {
 
     @Autowired
