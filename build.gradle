@@ -28,7 +28,8 @@ dependencies {
 	testCompileOnly 'org.projectlombok:lombok:1.18.28'
 	testAnnotationProcessor 'org.projectlombok:lombok:1.18.28'
 	implementation('io.jsonwebtoken:jjwt:0.9.1')
-
+	implementation platform('com.google.cloud:libraries-bom:26.53.0')
+	implementation 'com.google.cloud:google-cloud-storage'
 }
 
 tasks.named('test') {
