@@ -64,7 +64,12 @@ public class ProfileController {
 
     @PostMapping(path = "/follow")
     private ResponseEntity<HashMap<String, String>> followUser(@RequestBody FollowRequest request){
-
+        boolean following = profileService.followProfile(request);
+        if (following){
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 }

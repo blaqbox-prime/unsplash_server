@@ -38,13 +38,14 @@ public class ProfileService {
         return profileRepository.findByUsername(username);
     }
 
-    public void followProfile(FollowRequest details){
+    public boolean followProfile(FollowRequest details){
         Profile toFollow = profileRepository.findByUsername(details.getUsernameToFollow()).orElse(null);
         Profile current = profileRepository.findByUsername(details.getCurrentUsername()).orElse(null);
 
         if(toFollow != null && current != null){
             toFollow.addFollower(current);
+            return true;
         }
-
+        return false;
     }
 }
