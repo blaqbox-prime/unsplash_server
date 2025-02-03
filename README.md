@@ -1,9 +1,18 @@
 # Unsplash Clone Backend
 
+## Table of Contents
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Technology Stack](#technology-stack)
+- [Configuration](#configuration)
+- [Key Source Code Files](#key-source-code-files)
+- [Build and Run](#build-and-run)
+- [Service Documentation](#service-documentation)
+
 ## Overview
 This project is a backend service for an Unsplash clone built with Spring Boot. It provides secure image storage and management capabilities with a cloud-native architecture. The backend integrates user authentication and authorization using Spring Security with JWT, MongoDB for data storage, and Azure Blob Storage for image hosting.
 
-## Features
+## Key Features
 - **User Authentication and Authorization:** Implements Spring Security and JWT for secure access.
 - **Image Storage:** Stores images efficiently using Azure Blob Storage.
 - **Database Integration:** Utilizes MongoDB through Spring Data MongoDB.
@@ -22,32 +31,77 @@ This project is a backend service for an Unsplash clone built with Spring Boot. 
 - **Azure Storage Account**
 - **Maven**
 
-## Setup Instructions
-### 1. Clone the Repository
-```bash
-$ git clone https://github.com/your-repo-url/unsplash-clone-backend.git
-$ cd unsplash-clone-backend
-```
+## Configuration
+The application uses the following configurations:
+- **application.yml:** Holds environment-specific configurations.
+- **Gradle Build:** Dependency management and build tool.
 
-### 2. Configure Environment Variables
-Create a `.env` file in the root directory or configure environment variables manually:
-```
-MONGO_URI=<your-mongodb-uri>
-JWT_SECRET=<your-jwt-secret>
-AZURE_STORAGE_CONNECTION_STRING=<your-azure-connection-string>
-AZURE_CONTAINER_NAME=<your-container-name>
-```
+Ensure you have the necessary environment variables for database connections and JWT secret keys.
 
-### 3. Build the Project
-```bash
-$ mvn clean install
-```
+## Key Source Code Files
 
-### 4. Run the Application
-```bash
-$ mvn spring-boot:run
-```
-The backend service will start on `http://localhost:8080` by default.
+### `SecurityConfig.java`
+This file handles the application's security configuration.
+- Disables CSRF protection.
+- Configures request authorization paths.
+- Enables JWT-based stateless authentication.
+- Adds a custom `JwtAuthFilter` to the security chain.
+
+### `JwtService.java`
+This service handles JWT operations.
+- Generates JWT tokens.
+- Extracts claims and validates tokens.
+- Encodes the JWT using HMAC SHA-256.
+
+### `JwtAuthFilter.java`
+Custom filter to authenticate requests.
+- Intercepts requests to validate JWT tokens.
+- Loads user details and sets security context upon successful validation.
+
+### `AppConfig.java`
+Configuration class for beans related to authentication and password encoding.
+- Provides `AuthenticationManager`, `UserDetailsService`, and password encoding using BCrypt.
+
+### `Photo.java`
+Model class representing a photo document in MongoDB.
+- Fields: `label`, `_id`, `url`, `date_added`, and `likes`.
+- Methods for managing likes and photo data.
+
+### `Profile.java`
+Model class representing a user profile document.
+- Fields: `_id`, `userId`, `username`, `followers`, and `photos`.
+- Methods to manage followers and photos.
+
+### `PhotoController.java`
+Handles photo-related API endpoints.
+- Retrieve all photos or sorted photos.
+- Add a new photo.
+- Search photos by text.
+
+### `ProfileController.java`
+Handles profile-related API endpoints.
+- Create and update profiles.
+- Fetch profiles by username.
+- Follow other profiles.
+
+## Build and Run
+### Prerequisites
+- Java 17 or higher
+- MongoDB
+- Gradle
+
+### Commands
+1. **Build:**
+   ```bash
+   ./gradlew build
+   ```
+2. **Run:**
+   ```bash
+   ./gradlew bootRun
+   ```
+
+The application should now be accessible at `http://localhost:8080`.
+
 
 ## API Endpoints
 ### **Authentication**
@@ -100,17 +154,58 @@ Content-Type: multipart/form-data
 }
 ```
 
-## Testing
-Run unit and integration tests using Maven:
-```bash
-$ mvn test
-```
+## Service Documentation
 
-## Deployment
-Deploy the application to your preferred cloud platform. Ensure MongoDB and Azure Storage services are configured.
+### `ProfileService.java`
+#### Overview
+This service manages operations related to user profiles, including creation, updates, and follow functionality.
 
-## Contribution
-Contributions are welcome! Please fork the repository and submit a pull request.
+#### Methods
+- `createProfile(ProfileRequest details)`: Creates a new user profile.
+  - **Input:** ProfileRequest object containing `userId` and `username`.
+  - **Output:** Persisted Profile object.
+
+- `updateProfile(Profile updated)`: Updates an existing profile.
+  - **Input:** Updated Profile object.
+  - **Output:** Updated Profile object.
+
+- `fetchProfile(String username)`: Fetches a profile by username.
+  - **Input:** Username string.
+  - **Output:** Optional Profile object.
+
+- `followProfile(FollowRequest details)`: Adds a follower to a user profile.
+  - **Input:** FollowRequest object with `currentUsername` and `usernameToFollow`.
+  - **Output:** Boolean indicating success.
+
+### `PhotoService.java`
+#### Overview
+This service handles operations related to photo management, including adding photos.
+
+#### Methods
+- `addPhoto(String url, String label, String username)`: Adds a photo to a user's profile.
+  - **Input:** Photo URL, label, and username.
+  - **Output:** Persisted Photo object.
+  - **Throws:** `ProfileNotFoundException` if the username does not exist.
+
+### `ImageStorageClient.java`
+#### Overview
+Interface for image storage operations.
+
+#### Methods
+- `UploadImage(String containerName, String originalImageName, InputStream data, long length)`: Uploads an image to a storage container.
+  - **Input:** Container name, image name, input stream, and length.
+  - **Output:** URL of the uploaded image.
+
+### `AzureImageStorageClient.java`
+#### Overview
+Azure-based implementation of the `ImageStorageClient` interface.
+
+#### Methods
+- `UploadImage(String containerName, String originalImageName, InputStream data, long length)`: Uploads an image to an Azure Blob Storage container.
+  - **Input:** Container name, image name, input stream, and length.
+  - **Output:** Blob URL.
+  - **Details:** Generates a unique filename and uploads the image, ensuring overwrite protection.
+
 
 ## License
 This project is licensed under the MIT License.
