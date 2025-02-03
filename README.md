@@ -14,13 +14,13 @@ This project is a backend service for an Unsplash clone built with Spring Boot. 
 - **Security:** Spring Security, JWT  
 - **Database:** MongoDB  
 - **Cloud Storage:** Azure Blob Storage  
-- **Build Tool:** Maven
+- **Build Tool:** Gradle
 
 ## Prerequisites
 - **Java 17 or higher**
 - **MongoDB (local or cloud instance)**
 - **Azure Storage Account**
-- **Maven**
+- **Gradle**
 
 ## Setup Instructions
 ### 1. Clone the Repository
@@ -40,12 +40,12 @@ AZURE_CONTAINER_NAME=<your-container-name>
 
 ### 3. Build the Project
 ```bash
-$ mvn clean install
+$ ./gradlew clean build
 ```
 
 ### 4. Run the Application
 ```bash
-$ mvn spring-boot:run
+$ ./gradlew bootRun
 ```
 The backend service will start on `http://localhost:8080` by default.
 
@@ -78,8 +78,8 @@ unsplash-clone-backend/
 |       ├── repository/
 |       ├── model/
 |       ├── security/
-|├── application.properties
-|├── pom.xml
+|├── application.yml
+|├── build.gradle
 |└── .env
 ```
 
@@ -101,9 +101,9 @@ Content-Type: multipart/form-data
 ```
 
 ## Testing
-Run unit and integration tests using Maven:
+Run unit and integration tests using Gradle:
 ```bash
-$ mvn test
+$ ./gradlew test
 ```
 
 ## Deployment
@@ -114,5 +114,3 @@ Contributions are welcome! Please fork the repository and submit a pull request.
 
 ## License
 This project is licensed under the MIT License.
-
-
