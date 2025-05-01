@@ -1,6 +1,5 @@
 package com.blaqboxdev.unsplash.Models;
 
-import jakarta.persistence.UniqueConstraint;
 import lombok.*;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.*;
@@ -17,17 +16,18 @@ public class Profile {
     @MongoId
     private String _id;
 
-    private String userId;
-
     @Indexed(unique = true)
     private String username;
-    @Setter
-    @Getter
+
+    private String fullName;
+
     private ArrayList<Profile> followers;
-    private String profilePicture;
-    @Setter
-    @Getter
-    private ArrayList<Photo> photos;
+
+    private String avatar;
+
+    @DocumentReference(collection = "users")
+    private User user;
+
 
     public void addFollower(Profile followee){
         this.followers.add(followee);
@@ -37,11 +37,4 @@ public class Profile {
         this.followers.remove(followee);
     }
 
-    public void addPhoto(Photo photo){
-        this.photos.add(photo);
-    }
-
-    public void removePhoto(Photo photo){
-        this.photos.remove(photo);
-    }
 }

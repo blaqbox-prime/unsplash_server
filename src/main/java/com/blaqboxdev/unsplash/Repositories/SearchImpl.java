@@ -1,6 +1,6 @@
 package com.blaqboxdev.unsplash.Repositories;
 
-import com.blaqboxdev.unsplash.Models.Photo;
+import com.blaqboxdev.unsplash.Models.Image;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -25,9 +25,9 @@ public class SearchImpl implements SearchRepo{
 
 
     @Override
-    public List<Photo> findByText(String text) {
+    public List<Image> findByText(String text) {
 
-        final List<Photo> photos = new ArrayList<>();
+        final List<Image> images = new ArrayList<>();
 
         MongoDatabase database = client.getDatabase("unsplash");
         MongoCollection<Document> collection = database.getCollection("photos");
@@ -40,8 +40,8 @@ public class SearchImpl implements SearchRepo{
                 new Document("$sort",
                         new Document("date_added", -1L))));
 
-        result.forEach(doc -> photos.add(converter.read(Photo.class,doc)));
+        result.forEach(doc -> images.add(converter.read(Image.class,doc)));
 
-        return photos;
+        return images;
     }
 }

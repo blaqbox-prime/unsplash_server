@@ -3,28 +3,36 @@ package com.blaqboxdev.unsplash.Services;
 import com.blaqboxdev.unsplash.Models.FollowRequest;
 import com.blaqboxdev.unsplash.Models.Profile;
 import com.blaqboxdev.unsplash.Models.ProfileRequest;
+import com.blaqboxdev.unsplash.Models.User;
 import com.blaqboxdev.unsplash.Repositories.ProfileRepository;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import com.blaqboxdev.unsplash.Repositories.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class ProfileService {
 
     @Autowired
-    private ProfileRepository profileRepository;
+    private final ProfileRepository profileRepository;
+
+    @Autowired
+    private final UserRepository userRepository;
 
     public Profile createProfile(ProfileRequest details){
+
+        User user = userRepository.findById(details.getUserId()).orElseThrow();
+
         Profile profile = Profile.builder()
-                .userId(details.getUserId())
+                .user(user)
                 .username(details.getUsername())
-                .profilePicture("")
+                .avatar(details.getAvatar())
+                .fullName(details.getFullName())
                 .followers(new ArrayList<>())
-                .photos(new ArrayList<>())
                 .build();
 
         return profileRepository.save(profile);

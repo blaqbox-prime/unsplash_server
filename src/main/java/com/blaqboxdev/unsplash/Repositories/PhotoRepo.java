@@ -1,9 +1,7 @@
 package com.blaqboxdev.unsplash.Repositories;
 
-import com.blaqboxdev.unsplash.Models.Photo;
+import com.blaqboxdev.unsplash.Models.Image;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.List;
-
-public interface PhotoRepo extends MongoRepository<Photo,String> {
+public interface PhotoRepo extends MongoRepository<Image,String> {
 }

@@ -1,17 +1,13 @@
 package com.blaqboxdev.unsplash.Controllers;
 
-import com.blaqboxdev.unsplash.Models.Photo;
+import com.blaqboxdev.unsplash.Models.Image;
 import com.blaqboxdev.unsplash.Repositories.PhotoRepo;
 import com.blaqboxdev.unsplash.Repositories.PhotoRepositoryCustom;
 import com.blaqboxdev.unsplash.Repositories.SearchRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -29,23 +25,23 @@ public class PhotoController {
     @Autowired
     SearchRepo srepo;
     @GetMapping("/photos")
-    public List<Photo> allPhotos(){
+    public List<Image> allPhotos(){
         return repo.findAll();
     }
 
     @GetMapping("/photos-sorted")
-    public List<Photo> allPhotosDesc(){
+    public List<Image> allPhotosDesc(){
         return pcrepo.findAllSorted();
     }
 
     //@CrossOrigin
     @PostMapping("/add-photo")
-    public Photo addPhoto(@RequestBody Photo photo){
-        return repo.save(photo);
+    public Image addPhoto(@RequestBody Image image){
+        return repo.save(image);
     }
 
     @GetMapping("/photos/{text}")
-    public List<Photo> search(@PathVariable String text){
+    public List<Image> search(@PathVariable String text){
         return srepo.findByText(text);
     }
 

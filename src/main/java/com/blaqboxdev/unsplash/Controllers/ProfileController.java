@@ -33,7 +33,7 @@ public class ProfileController {
         }
 
 //        Ok
-        return ResponseEntity.ok(profileService.createProfile(request));
+        return ResponseEntity.ok(profile);
     }
 
     @GetMapping(path = "/{username}")

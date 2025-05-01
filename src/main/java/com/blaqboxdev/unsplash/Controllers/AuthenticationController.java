@@ -8,18 +8,19 @@ import com.blaqboxdev.unsplash.Services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
 public class AuthenticationController {
 
     @Autowired
     private final AuthenticationService service;
+
+    public AuthenticationController(AuthenticationService service) {
+        this.service = service;
+    }
 
 
     @PostMapping("/register")
@@ -29,7 +30,10 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
-        return ResponseEntity.ok(service.authenticate(request));
+        AuthenticationResponse response = service.authenticate(request);
+        System.out.println(response.toString());
+        if (!response.toString().isBlank()) return ResponseEntity.ok(response);
+        return ResponseEntity.badRequest().body(null);
     }
 
 }

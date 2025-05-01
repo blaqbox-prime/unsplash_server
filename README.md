@@ -63,20 +63,20 @@ Configuration class for beans related to authentication and password encoding.
 - Provides `AuthenticationManager`, `UserDetailsService`, and password encoding using BCrypt.
 
 ### `Photo.java`
-Model class representing a photo document in MongoDB.
+Model class representing a image document in MongoDB.
 - Fields: `label`, `_id`, `url`, `date_added`, and `likes`.
-- Methods for managing likes and photo data.
+- Methods for managing likes and image data.
 
 ### `Profile.java`
 Model class representing a user profile document.
-- Fields: `_id`, `userId`, `username`, `followers`, and `photos`.
-- Methods to manage followers and photos.
+- Fields: `_id`, `userId`, `username`, `followers`, and `images`.
+- Methods to manage followers and images.
 
 ### `PhotoController.java`
-Handles photo-related API endpoints.
-- Retrieve all photos or sorted photos.
-- Add a new photo.
-- Search photos by text.
+Handles image-related API endpoints.
+- Retrieve all images or sorted images.
+- Add a new image.
+- Search images by text.
 
 ### `ProfileController.java`
 Handles profile-related API endpoints.
@@ -179,10 +179,10 @@ This service manages operations related to user profiles, including creation, up
 
 ### `PhotoService.java`
 #### Overview
-This service handles operations related to photo management, including adding photos.
+This service handles operations related to image management, including adding images.
 
 #### Methods
-- `addPhoto(String url, String label, String username)`: Adds a photo to a user's profile.
+- `addPhoto(String url, String label, String username)`: Adds a image to a user's profile.
   - **Input:** Photo URL, label, and username.
   - **Output:** Persisted Photo object.
   - **Throws:** `ProfileNotFoundException` if the username does not exist.
