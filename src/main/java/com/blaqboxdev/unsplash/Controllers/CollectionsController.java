@@ -1,6 +1,6 @@
 package com.blaqboxdev.unsplash.Controllers;
 
-import com.azure.core.http.rest.Response;
+
 import com.blaqboxdev.unsplash.Models.Entities.Collection;
 import com.blaqboxdev.unsplash.Models.Requests.CollectionRequest;
 import com.blaqboxdev.unsplash.Services.CollectionsService;
@@ -38,7 +38,6 @@ public class CollectionsController {
 
     @PutMapping("/{collectionId}/add")
     public ResponseEntity<?> addImageToCollection(@PathVariable String collectionId, @RequestParam String imgId){
-        HashMap<String, String> res = new HashMap<>();
         try {
             return ResponseEntity.ok().body(collectionsService.addImageToCollection(collectionId, imgId));
         } catch (RuntimeException e) {
