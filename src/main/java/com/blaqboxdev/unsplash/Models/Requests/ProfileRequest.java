@@ -1,8 +1,6 @@
-package com.blaqboxdev.unsplash.Models;
+package com.blaqboxdev.unsplash.Models.Requests;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

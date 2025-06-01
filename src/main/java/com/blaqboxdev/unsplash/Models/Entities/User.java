@@ -1,5 +1,6 @@
-package com.blaqboxdev.unsplash.Models;
+package com.blaqboxdev.unsplash.Models.Entities;
 
+import com.blaqboxdev.unsplash.Models.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;

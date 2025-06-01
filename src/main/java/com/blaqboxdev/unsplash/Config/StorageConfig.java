@@ -9,13 +9,4 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class StorageConfig {
 
-    @Value("${spring.cloud.azure.storage.blob.account-key}")
-    String connectStr;
-
-    @Bean
-    BlobServiceClient blobServiceClient(){
-        return new BlobServiceClientBuilder()
-                .connectionString(connectStr)
-                .buildClient();
-    }
 }

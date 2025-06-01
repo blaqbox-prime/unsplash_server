@@ -1,4 +1,4 @@
-package com.blaqboxdev.unsplash.Models;
+package com.blaqboxdev.unsplash.Models.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

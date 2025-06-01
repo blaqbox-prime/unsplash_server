@@ -1,4 +1,4 @@
-package com.blaqboxdev.unsplash.Models;
+package com.blaqboxdev.unsplash.Models.Entities;
 
 import lombok.*;
 import org.springframework.data.mongodb.core.index.Indexed;

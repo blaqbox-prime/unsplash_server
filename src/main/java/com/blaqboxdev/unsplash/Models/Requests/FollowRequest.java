@@ -1,4 +1,4 @@
-package com.blaqboxdev.unsplash.Models;
+package com.blaqboxdev.unsplash.Models.Requests;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -1,6 +1,6 @@
 package com.blaqboxdev.unsplash.Repositories;
 
-import com.blaqboxdev.unsplash.Models.Profile;
+import com.blaqboxdev.unsplash.Models.Entities.Profile;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.Optional;

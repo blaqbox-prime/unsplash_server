@@ -1,4 +1,4 @@
-package com.blaqboxdev.unsplash.Models;
+package com.blaqboxdev.unsplash.Models.Entities;
 
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -26,6 +26,7 @@ public class Image {
 
     private LocalDateTime date_added;
 
+    @Builder.Default
     private int likes = 0;
 
     @DocumentReference(collection = "profiles")

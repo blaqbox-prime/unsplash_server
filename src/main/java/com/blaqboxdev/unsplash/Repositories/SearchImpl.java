@@ -1,13 +1,16 @@
 package com.blaqboxdev.unsplash.Repositories;
 
-import com.blaqboxdev.unsplash.Models.Image;
+import com.blaqboxdev.unsplash.Models.Entities.Image;
 import com.mongodb.client.AggregateIterable;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoConverter;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -18,30 +21,19 @@ import java.util.List;
 public class SearchImpl implements SearchRepo{
 
     @Autowired
-    MongoConverter converter;
-
-    @Autowired
-    MongoClient client;
-
+    private MongoTemplate mongoTemplate;
 
     @Override
-    public List<Image> findByText(String text) {
+    public List<Image> findByText(List<String> keywords) {
+        List<Criteria> criteriaList = new ArrayList<>();
 
-        final List<Image> images = new ArrayList<>();
+        for (String keyword : keywords) {
+            Criteria labelCriteria = Criteria.where("label").regex(".*" + keyword + ".*", "i");
+            Criteria tagsCriteria = Criteria.where("tags").elemMatch(Criteria.where("$regex").is("^" + keyword +"$").and("$options").is("i"));
+            criteriaList.add(new Criteria().orOperator(labelCriteria, tagsCriteria));
+        }
 
-        MongoDatabase database = client.getDatabase("unsplash");
-        MongoCollection<Document> collection = database.getCollection("photos");
-
-        AggregateIterable<Document> result = collection.aggregate(Arrays.asList(new Document("$search",
-                        new Document("index", "default")
-                                .append("text",
-                                        new Document("query", text)
-                                                .append("path", "label"))),
-                new Document("$sort",
-                        new Document("date_added", -1L))));
-
-        result.forEach(doc -> images.add(converter.read(Image.class,doc)));
-
-        return images;
+        Query query = new Query(new Criteria().orOperator(criteriaList.toArray(new Criteria[0])));
+        return mongoTemplate.find(query, Image.class);
     }
 }
