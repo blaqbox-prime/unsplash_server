@@ -30,7 +30,7 @@ public class Image {
     private int likes = 0;
 
     @DocumentReference(collection = "profiles")
-    private Profile user;
+    private Profile profile;
 
     public void increment_likes(){
         this.likes = this.likes + 1;

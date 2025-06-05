@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -73,5 +74,19 @@ public class ProfileServiceImpl implements ProfileService {
         return false;
     }
 
+    @Override
+    public Profile getProfileByUserId(String userId) {
+        return profileRepository.findByUserId(userId).orElseThrow(() -> new ProfileNotFoundException("This user does not have a profile"));
+    }
+
+    @Override
+    public Profile getProfileByUser(User user) {
+        return profileRepository.findByUser(user).orElseThrow(() -> new ProfileNotFoundException("This user does not have a profile"));
+    }
+
+    @Override
+    public List<Profile> getAllProfiles() {
+        return profileRepository.findAll();
+    }
 
 }

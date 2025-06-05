@@ -6,11 +6,12 @@ import com.blaqboxdev.unsplash.Repositories.ImageRepo;
 import com.blaqboxdev.unsplash.Repositories.PhotoRepositoryCustom;
 import com.blaqboxdev.unsplash.Repositories.ProfileRepository;
 import com.blaqboxdev.unsplash.Repositories.SearchRepo;
+import com.blaqboxdev.unsplash.Services.ImageService;
 import com.blaqboxdev.unsplash.Services.Implementations.StorageServiceAzure;
-import com.blaqboxdev.unsplash.Services.StorageService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,25 +29,38 @@ import java.util.UUID;
 @RequestMapping("/api/v1/images")
 public class ImagesController {
 
+
+
     @Autowired
-    final ImageRepo repo;
+    final ImageService imageService;
+
     @Autowired
-    final PhotoRepositoryCustom pcrepo;
+    final PhotoRepositoryCustom customImageRepository;
     @Autowired
-    final SearchRepo srepo;
+    final SearchRepo searchImageRepository;
     @Autowired
     final ProfileRepository profileRepository;
     @Autowired
     final StorageServiceAzure storageService;
 
-    @GetMapping("/")
-    public List<Image> allPhotos(){
-        return repo.findAll();
+    @GetMapping()
+    public ResponseEntity<List<Image>> allPhotos(){
+        return ResponseEntity.ok().body(imageService.getAllImages());
     }
 
     @GetMapping("/latest")
     public List<Image> allPhotosDesc(){
-        return pcrepo.findAllSorted();
+        return customImageRepository.findAllSorted();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getImage(@PathVariable String id){
+        try {
+            return ResponseEntity.ok().body(imageService.getImageById(id));
+        } catch (RuntimeException e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @SneakyThrows
@@ -56,32 +70,15 @@ public class ImagesController {
                          @RequestPart("userId") String userId,
                          @RequestPart("image") MultipartFile image){
 
-//        local object
-        Image newImage = details;
-
-        Optional<Profile> uploader = profileRepository.findById(userId);
-//        if the user is invalid, return 403
-        if (uploader.isEmpty() || image.isEmpty()){
-            return ResponseEntity.badRequest().body("Image not provided");
-        }
-        newImage.setUser(uploader.get());
-
-        String imageName = UUID.randomUUID().toString() + image.getOriginalFilename().substring(image.getOriginalFilename().length() - 4);
-
-        String imageUrl = storageService.uploadImage(imageName, image.getInputStream());
-
-        newImage.setUrl(imageUrl);
-        newImage.setDate_added(LocalDateTime.now());
-
-        repo.save(newImage);
-
-        return ResponseEntity.ok().body(details);
+        Image savedImage = imageService.addPhoto(details, userId, image);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedImage);
 
     }
 
     @GetMapping("/search")
-    public List<Image> search(@RequestParam String text){
-        return srepo.findByText(Arrays.stream(text.split(" ")).toList());
+    public List<Image> search(@RequestParam String query){
+        System.out.println(query);
+        return searchImageRepository.findByText(Arrays.stream(query.split(" ")).toList());
     }
 
 }

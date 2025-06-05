@@ -4,7 +4,10 @@ import com.blaqboxdev.unsplash.Models.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +22,11 @@ import java.util.List;
 @Data
 @Builder
 public class User implements UserDetails {
+
+    @MongoId(FieldType.OBJECT_ID)
     private String _id;
+
+    @Indexed(unique = true)
     private String email;
     private String password;
 

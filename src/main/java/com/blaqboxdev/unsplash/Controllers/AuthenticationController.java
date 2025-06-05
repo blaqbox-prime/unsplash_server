@@ -1,6 +1,7 @@
 package com.blaqboxdev.unsplash.Controllers;
 
 
+import com.blaqboxdev.unsplash.Models.DTO.RegistrationResponse;
 import com.blaqboxdev.unsplash.Models.Requests.AuthenticationRequest;
 import com.blaqboxdev.unsplash.Models.DTO.AuthenticationResponse;
 import com.blaqboxdev.unsplash.Models.Requests.RegisterRequest;
@@ -13,14 +14,14 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("/api/v1/auth")
 public class AuthenticationController {
 
     @Autowired
     private final AuthenticationService service;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
+    public ResponseEntity<RegistrationResponse> register(@RequestBody RegisterRequest request){
         return ResponseEntity.ok(service.register(request));
     }
 

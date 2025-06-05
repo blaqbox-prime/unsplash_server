@@ -1,14 +1,19 @@
 package com.blaqboxdev.unsplash.Services.Implementations;
 
 import com.blaqboxdev.unsplash.Config.JwtService;
+import com.blaqboxdev.unsplash.Exceptions.DuplicateUserEmailAlreadyExists;
 import com.blaqboxdev.unsplash.Exceptions.UserNotFoundException;
 import com.blaqboxdev.unsplash.Models.DTO.AuthenticationResponse;
+import com.blaqboxdev.unsplash.Models.DTO.ProfileDTO;
+import com.blaqboxdev.unsplash.Models.DTO.RegistrationResponse;
+import com.blaqboxdev.unsplash.Models.DTO.UserDTO;
 import com.blaqboxdev.unsplash.Models.Entities.User;
 import com.blaqboxdev.unsplash.Models.Requests.AuthenticationRequest;
 import com.blaqboxdev.unsplash.Models.Requests.RegisterRequest;
 import com.blaqboxdev.unsplash.Models.Role;
 import com.blaqboxdev.unsplash.Repositories.UserRepository;
 import com.blaqboxdev.unsplash.Services.AuthenticationService;
+import com.blaqboxdev.unsplash.Services.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +25,7 @@ import org.springframework.stereotype.Service;
 public class JwtAuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
-
+    private final ProfileService profileService;
     private final JwtService jwtService;
 
     private final AuthenticationManager authenticationManager;
@@ -32,22 +37,29 @@ public class JwtAuthenticationServiceImpl implements AuthenticationService {
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
-                .email(request.getEmail())
+                .profile(new ProfileDTO(profileService.getProfileByUser(user)))
                 .build();
     }
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public RegistrationResponse register(RegisterRequest request) {
         var user = User.builder()
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
 
-        repository.save(user);
+        User savedUser = null;
+        UserDTO userDTO = null;
+        try {
+            savedUser = repository.save(user);
+            userDTO = new UserDTO(savedUser);
+        } catch (RuntimeException e) {
+            throw new DuplicateUserEmailAlreadyExists("User with email " + request.getEmail() + " already exists");
+        }
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder()
+        return RegistrationResponse.builder()
                 .token(jwtToken)
-                .email(user.getEmail())
+                .user(userDTO)
                 .build();
     }
 }
