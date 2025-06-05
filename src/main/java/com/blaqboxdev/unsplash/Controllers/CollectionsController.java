@@ -1,6 +1,7 @@
 package com.blaqboxdev.unsplash.Controllers;
 
 
+import com.blaqboxdev.unsplash.Exceptions.CollectionNotFoundException;
 import com.blaqboxdev.unsplash.Models.Entities.Collection;
 import com.blaqboxdev.unsplash.Models.Requests.CollectionRequest;
 import com.blaqboxdev.unsplash.Services.CollectionsService;
@@ -52,6 +53,26 @@ public class CollectionsController {
             return ResponseEntity.accepted().body(collectionsService.updateCollection(newCollection));
         } catch (RuntimeException e){
             return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteCollection(@PathVariable String id){
+        try{
+            collectionsService.deleteCollection(id);
+            return ResponseEntity.ok().build();
+        } catch (CollectionNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PatchMapping("/{id}/remove")
+    public ResponseEntity<?> removeImageFromCollection(@PathVariable String id, @RequestParam String imageId){
+        try {
+            collectionsService.removeImageFromCollection(id, imageId);
+            return ResponseEntity.ok().build();
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
