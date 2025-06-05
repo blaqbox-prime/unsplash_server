@@ -82,6 +82,14 @@ public class CollectionServiceImplementation implements CollectionsService {
     }
 
     @Override
+    public void removeImageFromCollection(String collectionId, String imageId) {
+        Collection collection = collectionRepository.findById(collectionId).orElseThrow(() -> new CollectionNotFoundException("Collection ID not found"));
+        Image image = imageRepository.findById(imageId).orElseThrow(() -> new ImageNotFoundException("Image not found"));
+
+        collection.removeImage(image);
+    }
+
+    @Override
     public Collection addImageToCollection(String collectionId, String imgId) {
         Collection collection = collectionRepository.findById(collectionId).orElseThrow(() -> new CollectionNotFoundException("Collection with ID " + collectionId + " not found."));
         Image image = imageRepository.findById(imgId).orElseThrow(() -> new ImageNotFoundException("Image with ID " + imgId + " not found"));

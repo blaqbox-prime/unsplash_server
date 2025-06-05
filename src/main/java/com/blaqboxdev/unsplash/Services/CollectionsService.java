@@ -22,5 +22,7 @@ public interface CollectionsService {
 
     List<Collection> getAllCollections();
 
+    void removeImageFromCollection(String collectionId, String imageId);
+
     Collection addImageToCollection(String collectionId, String imgId);
 }
