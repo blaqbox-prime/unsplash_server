@@ -1,5 +1,6 @@
-package com.blaqboxdev.unsplash.Models;
+package com.blaqboxdev.unsplash.Models.Entities;
 
+import com.blaqboxdev.unsplash.Models.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.*;
@@ -19,8 +20,6 @@ import java.util.List;
 @Builder
 public class User implements UserDetails {
     private String _id;
-    private String firstname;
-    private String lastname;
     private String email;
     private String password;
 

@@ -1,8 +1,8 @@
 package com.blaqboxdev.unsplash.Controllers;
 
-import com.blaqboxdev.unsplash.Models.FollowRequest;
-import com.blaqboxdev.unsplash.Models.Profile;
-import com.blaqboxdev.unsplash.Models.ProfileRequest;
+import com.blaqboxdev.unsplash.Models.Requests.FollowRequest;
+import com.blaqboxdev.unsplash.Models.Entities.Profile;
+import com.blaqboxdev.unsplash.Models.Requests.ProfileRequest;
 import com.blaqboxdev.unsplash.Services.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ import java.util.HashMap;
 
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/profile")
+@RequestMapping("/api/v1/profiles")
 public class ProfileController {
 
     @Autowired
@@ -33,13 +33,13 @@ public class ProfileController {
         }
 
 //        Ok
-        return ResponseEntity.ok(profileService.createProfile(request));
+        return ResponseEntity.ok(profile);
     }
 
     @GetMapping(path = "/{username}")
     private ResponseEntity<Profile> fetchProfileByUsername(@PathVariable String username){
 //        Not Found
-        Profile profile = profileService.fetchProfile(username).orElse(null);
+        Profile profile = profileService.getProfileByUsername(username);
         if (profile == null) {
             return ResponseEntity.notFound().build();
         }
@@ -50,15 +50,12 @@ public class ProfileController {
     @PutMapping(path = "/{username}/update")
     private ResponseEntity<Profile> updateProfile(@PathVariable String username, @RequestBody Profile updated){
 //        NotFound
-        Profile profile = profileService.fetchProfile(username).orElse(null);
+        Profile profile = profileService.getProfileByUsername(username);
         if (profile == null) {
             return ResponseEntity.notFound().build();
         }
 //        ok
         profile = profileService.updateProfile(updated);
-        System.out.println("==============================");
-        System.out.println(profile.toString());
-        System.out.println("==============================");
         return ResponseEntity.ok(profile);
     }
 

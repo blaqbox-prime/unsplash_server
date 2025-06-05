@@ -1,26 +1,23 @@
 package com.blaqboxdev.unsplash.Controllers;
 
 
-import com.blaqboxdev.unsplash.Models.AuthenticationRequest;
-import com.blaqboxdev.unsplash.Models.AuthenticationResponse;
-import com.blaqboxdev.unsplash.Models.RegisterRequest;
+import com.blaqboxdev.unsplash.Models.Requests.AuthenticationRequest;
+import com.blaqboxdev.unsplash.Models.DTO.AuthenticationResponse;
+import com.blaqboxdev.unsplash.Models.Requests.RegisterRequest;
 import com.blaqboxdev.unsplash.Services.AuthenticationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
 public class AuthenticationController {
 
     @Autowired
     private final AuthenticationService service;
-
 
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request){
@@ -29,7 +26,10 @@ public class AuthenticationController {
 
     @PostMapping("/authenticate")
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request){
-        return ResponseEntity.ok(service.authenticate(request));
+        AuthenticationResponse response = service.authenticate(request);
+        System.out.println(response.toString());
+        if (!response.toString().isBlank()) return ResponseEntity.ok(response);
+        return ResponseEntity.badRequest().body(null);
     }
 
 }

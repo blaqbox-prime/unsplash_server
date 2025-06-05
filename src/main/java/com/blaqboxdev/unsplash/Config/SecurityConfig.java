@@ -20,10 +20,6 @@ public class SecurityConfig {
     private final JwtAuthFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
 
-//    public SecurityConfig(JwtAuthFilter jwtAuthFilter, AuthenticationProvider authenticationProvider) {
-//        this.jwtAuthFilter = jwtAuthFilter;
-//        this.authenticationProvider = authenticationProvider;
-//    }
 
     @Bean
     public SecurityFilterChain sfc(HttpSecurity http) throws Exception {
@@ -32,7 +28,7 @@ public class SecurityConfig {
                 .requestMatchers("/api/auth/**")
                 .permitAll()
                 .anyRequest()
-                .authenticated()
+                .permitAll()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

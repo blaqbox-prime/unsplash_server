@@ -1,10 +1,9 @@
 package com.blaqboxdev.unsplash.Repositories;
 
-import com.blaqboxdev.unsplash.Models.Photo;
-import org.bson.Document;
+import com.blaqboxdev.unsplash.Models.Entities.Image;
 
 import java.util.List;
 
 public interface SearchRepo {
-    List<Photo> findByText(String text);
+    List<Image> findByText(List<String> text);
 }

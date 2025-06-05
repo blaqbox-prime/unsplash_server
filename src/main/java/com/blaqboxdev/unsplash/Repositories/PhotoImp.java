@@ -1,9 +1,8 @@
 package com.blaqboxdev.unsplash.Repositories;
 
-import com.blaqboxdev.unsplash.Models.Photo;
+import com.blaqboxdev.unsplash.Models.Entities.Image;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import com.mongodb.client.*;
 import com.mongodb.client.model.Sorts;
@@ -21,16 +20,16 @@ public class PhotoImp implements PhotoRepositoryCustom{
     @Autowired
     MongoClient client;
 
-    public List<Photo> findAllSorted() {
+    public List<Image> findAllSorted() {
 
         MongoDatabase database = client.getDatabase("unsplash");
         MongoCollection<Document> collection = database.getCollection("photos");
 
         FindIterable<Document> results = collection.find().sort(Sorts.descending("date_added"));
 
-        List<Photo> docsSorted = new ArrayList<>();
+        List<Image> docsSorted = new ArrayList<>();
 
-        results.forEach(doc -> docsSorted.add(converter.read(Photo.class,doc)));
+        results.forEach(doc -> docsSorted.add(converter.read(Image.class,doc)));
 
         return docsSorted;
     }
