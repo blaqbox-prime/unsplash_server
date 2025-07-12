@@ -2,11 +2,13 @@ package com.blaqboxdev.unsplash.Services.Implementations;
 
 import com.blaqboxdev.unsplash.Config.JwtService;
 import com.blaqboxdev.unsplash.Exceptions.DuplicateUserEmailAlreadyExists;
+import com.blaqboxdev.unsplash.Exceptions.ProfileNotFoundException;
 import com.blaqboxdev.unsplash.Exceptions.UserNotFoundException;
 import com.blaqboxdev.unsplash.Models.DTO.AuthenticationResponse;
 import com.blaqboxdev.unsplash.Models.DTO.ProfileDTO;
 import com.blaqboxdev.unsplash.Models.DTO.RegistrationResponse;
 import com.blaqboxdev.unsplash.Models.DTO.UserDTO;
+import com.blaqboxdev.unsplash.Models.Entities.Profile;
 import com.blaqboxdev.unsplash.Models.Entities.User;
 import com.blaqboxdev.unsplash.Models.Requests.AuthenticationRequest;
 import com.blaqboxdev.unsplash.Models.Requests.RegisterRequest;
@@ -17,6 +19,8 @@ import com.blaqboxdev.unsplash.Services.ProfileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -61,5 +65,27 @@ public class JwtAuthenticationServiceImpl implements AuthenticationService {
                 .token(jwtToken)
                 .user(userDTO)
                 .build();
+    }
+
+    @Override
+    public ProfileDTO getActiveSessionUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new RuntimeException("User is not authenticated");
+        }
+
+        String email = authentication.getName();
+
+        // Fetch user details from database
+        Profile user = profileService.getProfileByUser(repository.findByEmail(email).orElseThrow(() -> new UserNotFoundException("User not found")));
+
+        if (user == null) {
+            throw new ProfileNotFoundException("The profile this username is not found");
+        }
+
+        // Convert to response DTO (don't include sensitive data like password)
+        ProfileDTO userResponse = new ProfileDTO(user);
+
+        return userResponse;
     }
 }
