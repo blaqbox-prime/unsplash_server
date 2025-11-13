@@ -9,7 +9,7 @@ import com.blaqboxdev.unsplash.Models.Entities.Image;
 import com.blaqboxdev.unsplash.Models.Entities.Profile;
 import com.blaqboxdev.unsplash.Models.Requests.CollectionRequest;
 import com.blaqboxdev.unsplash.Repositories.CollectionRepository;
-import com.blaqboxdev.unsplash.Repositories.ImageRepo;
+import com.blaqboxdev.unsplash.Repositories.ImageRepository;
 import com.blaqboxdev.unsplash.Repositories.ProfileRepository;
 import com.blaqboxdev.unsplash.Services.CollectionsService;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class CollectionServiceImplementation implements CollectionsService {
     @Autowired
     final private CollectionRepository collectionRepository;
     final private ProfileRepository profileRepository;
-    final private ImageRepo imageRepository;
+    final private ImageRepository imageRepository;
 
     @Override
     public Collection createCollection(CollectionRequest collection) {
@@ -54,7 +54,8 @@ public class CollectionServiceImplementation implements CollectionsService {
 
     @Override
     public Collection getCollectionById(String id) {
-        return collectionRepository.findById(id).orElseThrow(() -> new CollectionNotFoundException("Collection ID not found."));
+        System.out.println(collectionRepository.existsById(id));
+        return collectionRepository.findBy_id(id).orElseThrow(() -> new CollectionNotFoundException("Collection ID not found."));
     }
 
     @Override
@@ -82,11 +83,15 @@ public class CollectionServiceImplementation implements CollectionsService {
     }
 
     @Override
-    public void removeImageFromCollection(String collectionId, String imageId) {
+    public boolean removeImageFromCollection(String collectionId, String imageId) {
         Collection collection = collectionRepository.findById(collectionId).orElseThrow(() -> new CollectionNotFoundException("Collection ID not found"));
         Image image = imageRepository.findById(imageId).orElseThrow(() -> new ImageNotFoundException("Image not found"));
 
-        collection.removeImage(image);
+        boolean isRemoved = collection.removeImage(image);
+        if (isRemoved) {
+            collectionRepository.save(collection);
+        }
+        return isRemoved;
     }
 
     @Override
@@ -95,5 +100,10 @@ public class CollectionServiceImplementation implements CollectionsService {
         Image image = imageRepository.findById(imgId).orElseThrow(() -> new ImageNotFoundException("Image with ID " + imgId + " not found"));
         collection.addImage(image);
         return collectionRepository.save(collection);
+    }
+
+    @Override
+    public List<Collection> getCollectionsByImageId(String id) {
+        return collectionRepository.findAllByImageId(id).orElseThrow(() -> new CollectionNotFoundException("Failed to get collections"));
     }
 }

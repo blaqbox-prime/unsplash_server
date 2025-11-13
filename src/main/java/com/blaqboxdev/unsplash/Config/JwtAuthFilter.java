@@ -1,5 +1,6 @@
 package com.blaqboxdev.unsplash.Config;
 
+import com.blaqboxdev.unsplash.Services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

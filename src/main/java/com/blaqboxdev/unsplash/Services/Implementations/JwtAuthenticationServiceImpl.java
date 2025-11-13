@@ -1,6 +1,6 @@
 package com.blaqboxdev.unsplash.Services.Implementations;
 
-import com.blaqboxdev.unsplash.Config.JwtService;
+import com.blaqboxdev.unsplash.Services.JwtService;
 import com.blaqboxdev.unsplash.Exceptions.DuplicateUserEmailAlreadyExists;
 import com.blaqboxdev.unsplash.Exceptions.ProfileNotFoundException;
 import com.blaqboxdev.unsplash.Exceptions.UserNotFoundException;

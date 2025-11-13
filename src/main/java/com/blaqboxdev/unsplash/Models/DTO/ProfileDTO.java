@@ -3,6 +3,7 @@ package com.blaqboxdev.unsplash.Models.DTO;
 
 import com.blaqboxdev.unsplash.Models.Entities.Profile;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
+@Builder
 public class ProfileDTO implements Serializable {
     private String _id;
 
