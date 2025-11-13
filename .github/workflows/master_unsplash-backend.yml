@@ -24,6 +24,9 @@ jobs:
           java-version: '17'
           distribution: 'microsoft'
 
+      - name: 📝 Grant Execute Permission to Gradle Wrapper
+        run: chmod +x gradlew
+        
       - name: Build with gradle
         run: ./gradlew clean build
 
@@ -62,3 +65,4 @@ jobs:
           package: '*.jar'
 
           
+
