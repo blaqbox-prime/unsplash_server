@@ -1,213 +1,133 @@
-# Unsplash Clone Backend
+# Unsplash Clone - Full Stack Photo Sharing Application
 
-## Table of Contents
-- [Overview](#overview)
-- [Key Features](#key-features)
-- [Technology Stack](#technology-stack)
-- [Configuration](#configuration)
-- [Key Source Code Files](#key-source-code-files)
-- [Build and Run](#build-and-run)
-- [Service Documentation](#service-documentation)
+This is a full-stack photo-sharing web application inspired by Unsplash. It features a Java Spring Boot backend with a RESTful API and a React frontend. This project is designed to showcase a modern, scalable, and well-documented application, perfect for a developer portfolio.
 
-## Overview
-This project is a backend service for an Unsplash clone built with Spring Boot. It provides secure image storage and management capabilities with a cloud-native architecture. The backend integrates user authentication and authorization using Spring Security with JWT, MongoDB for data storage, and Azure Blob Storage for image hosting.
+## Live Demo
 
-## Key Features
-- **User Authentication and Authorization:** Implements Spring Security and JWT for secure access.
-- **Image Storage:** Stores images efficiently using Azure Blob Storage.
-- **Database Integration:** Utilizes MongoDB through Spring Data MongoDB.
-- **RESTful API Endpoints:** Provides endpoints for user registration, image uploads, and retrieval.
+[Link to the live application](https://your-live-demo-link.com)
 
-## Technology Stack
-- **Backend Framework:** Spring Boot  
-- **Security:** Spring Security, JWT  
-- **Database:** MongoDB  
-- **Cloud Storage:** Azure Blob Storage  
-- **Build Tool:** Maven
+## Features
 
-## Prerequisites
-- **Java 17 or higher**
-- **MongoDB (local or cloud instance)**
-- **Azure Storage Account**
-- **Maven**
+*   **User Authentication:** Secure user registration and login using JWT authentication.
+*   **Image Management:** Upload, view, and manage your photos.
+*   **Image Collections:** Create and manage collections of photos.
+*   **Social Features:** Follow other users.
+*   **Search:** Powerful search functionality to discover photos.
+*   **API Documentation:** Interactive API documentation powered by Swagger UI.
 
-## Configuration
-The application uses the following configurations:
-- **application.yml:** Holds environment-specific configurations.
-- **Gradle Build:** Dependency management and build tool.
+## Tech Stack
 
-Ensure you have the necessary environment variables for database connections and JWT secret keys.
+### Backend
 
-## Key Source Code Files
+*   **Java 17**
+*   **Spring Boot 3**
+*   **Spring Data MongoDB:** For database interaction.
+*   **Spring Security:** For authentication and authorization with JWT.
+*   **Azure Blob Storage:** For storing and managing image files.
+*   **SpringDoc (Swagger UI):** For API documentation.
+*   **Lombok:** To reduce boilerplate code.
+*   **Gradle:** As the build tool.
 
-### `SecurityConfig.java`
-This file handles the application's security configuration.
-- Disables CSRF protection.
-- Configures request authorization paths.
-- Enables JWT-based stateless authentication.
-- Adds a custom `JwtAuthFilter` to the security chain.
+### Frontend
 
-### `JwtService.java`
-This service handles JWT operations.
-- Generates JWT tokens.
-- Extracts claims and validates tokens.
-- Encodes the JWT using HMAC SHA-256.
-
-### `JwtAuthFilter.java`
-Custom filter to authenticate requests.
-- Intercepts requests to validate JWT tokens.
-- Loads user details and sets security context upon successful validation.
-
-### `AppConfig.java`
-Configuration class for beans related to authentication and password encoding.
-- Provides `AuthenticationManager`, `UserDetailsService`, and password encoding using BCrypt.
-
-### `Photo.java`
-Model class representing a image document in MongoDB.
-- Fields: `label`, `_id`, `url`, `date_added`, and `likes`.
-- Methods for managing likes and image data.
-
-### `Profile.java`
-Model class representing a user profile document.
-- Fields: `_id`, `userId`, `username`, `followers`, and `images`.
-- Methods to manage followers and images.
-
-### `PhotoController.java`
-Handles image-related API endpoints.
-- Retrieve all images or sorted images.
-- Add a new image.
-- Search images by text.
-
-### `ProfileController.java`
-Handles profile-related API endpoints.
-- Create and update profiles.
-- Fetch profiles by username.
-- Follow other profiles.
-
-## Build and Run
-### Prerequisites
-- Java 17 or higher
-- MongoDB
-- Gradle
-
-### Commands
-1. **Build:**
-   ```bash
-   ./gradlew build
-   ```
-2. **Run:**
-   ```bash
-   ./gradlew bootRun
-   ```
-
-The application should now be accessible at `http://localhost:8080`.
-
-
-## API Endpoints
-### **Authentication**
-- `POST /api/auth/register`: Register a new user.
-- `POST /api/auth/login`: Authenticate a user and receive a JWT.
-
-### **Image Management**
-- `POST /api/images/upload`: Upload a new image (Authenticated).
-- `GET /api/images/{id}`: Retrieve an image by its ID (Authenticated).
-- `DELETE /api/images/{id}`: Delete an image by its ID (Authenticated).
-
-## Security Configuration
-- **JWT Authentication:** Secures API endpoints by requiring a valid JWT.
-- **Stateless Sessions:** Ensures the application does not maintain server-side sessions.
-- **Role-based Access Control (RBAC):** Defines access rules for endpoints.
-
-## Image Storage
-- Images are stored in Azure Blob Storage.
-- Ensure your Azure Storage Account and container are properly configured and accessible.
+*   **React**
+*   **React Router**
+*   **(Other frontend libraries...)**
 
 ## Project Structure
-```
-unsplash-clone-backend/
-|├── src/main/java/
-|   ├── com.example.unsplashclone/
-|       ├── controller/
-|       ├── service/
-|       ├── repository/
-|       ├── model/
-|       ├── security/
-|├── application.properties
-|├── pom.xml
-|└── .env
-```
 
-## Example Request
-### Upload Image
-**Request:**
-```bash
-POST /api/images/upload
-Authorization: Bearer <jwt-token>
-Content-Type: multipart/form-data
-```
-**Response:**
-```json
-{
-  "id": "abc123",
-  "url": "https://yourstorageaccount.blob.core.windows.net/container-name/image.jpg",
-  "uploadedAt": "2025-02-03T12:00:00Z"
-}
-```
+The backend is organized into the following key packages:
 
-## Service Documentation
+*   **Controllers:** Handle incoming HTTP requests and delegate to services.
+*   **Models:** Define the data structures of the application (Entities, DTOs, and Requests).
+*   **Services:** Contain the business logic of the application.
+*   **Repositories:** Provide an abstraction over the database.
+*   **Exceptions:** Custom exceptions for handling specific error scenarios.
 
-### `ProfileService.java`
-#### Overview
-This service manages operations related to user profiles, including creation, updates, and follow functionality.
+## API Documentation
 
-#### Methods
-- `createProfile(ProfileRequest details)`: Creates a new user profile.
-  - **Input:** ProfileRequest object containing `userId` and `username`.
-  - **Output:** Persisted Profile object.
+The API is documented using Swagger UI. Once you run the application, you can access the interactive API documentation at `http://localhost:8080/swagger-ui.html`.
 
-- `updateProfile(Profile updated)`: Updates an existing profile.
-  - **Input:** Updated Profile object.
-  - **Output:** Updated Profile object.
+### Authentication API (`/api/v1/auth`)
 
-- `fetchProfile(String username)`: Fetches a profile by username.
-  - **Input:** Username string.
-  - **Output:** Optional Profile object.
+| Method   | Endpoint        | Description                               |
+| :------- | :-------------- | :---------------------------------------- |
+| `POST`   | `/register`     | Register a new user.                      |
+| `POST`   | `/authenticate` | Authenticate a user and receive a JWT.    |
+| `GET`    | `/me`           | Check if the session token is valid.      |
 
-- `followProfile(FollowRequest details)`: Adds a follower to a user profile.
-  - **Input:** FollowRequest object with `currentUsername` and `usernameToFollow`.
-  - **Output:** Boolean indicating success.
+### Images API (`/api/v1/images`)
 
-### `PhotoService.java`
-#### Overview
-This service handles operations related to image management, including adding images.
+| Method | Endpoint                  | Description                               |
+| :----- | :------------------------ | :---------------------------------------- |
+| `GET`  | `/`                       | Get all images.                           |
+| `GET`  | `/latest`                 | Get all images, sorted by the latest.     |
+| `GET`  | `/{id}`                   | Get a specific image by its ID.           |
+| `POST` | `/`                       | Upload a new image.                       |
+| `GET`  | `/search?query={query}`   | Search for images.                        |
+| `GET`  | `/profile/{username}`     | Get all images uploaded by a user.        |
 
-#### Methods
-- `addPhoto(String url, String label, String username)`: Adds a image to a user's profile.
-  - **Input:** Photo URL, label, and username.
-  - **Output:** Persisted Photo object.
-  - **Throws:** `ProfileNotFoundException` if the username does not exist.
+### Collections API (`/api/v1/collections`)
 
-### `ImageStorageClient.java`
-#### Overview
-Interface for image storage operations.
+| Method   | Endpoint                  | Description                       |
+| :------- | :------------------------ | :-------------------------------- |
+| `GET`    | `/`                       | Get all collections.              |
+| `POST`   | `/`                       | Create a new collection.          |
+| `POST`   | `/{collectionId}/images`  | Add an image to a collection.     |
+| `PATCH`  | `/{id}`                   | Update a collection's details.    |
+| `DELETE` | `/{id}`                   | Delete a collection.              |
+| `DELETE` | `/{id}/images/{imageId}`  | Remove an image from a collection.|
 
-#### Methods
-- `UploadImage(String containerName, String originalImageName, InputStream data, long length)`: Uploads an image to a storage container.
-  - **Input:** Container name, image name, input stream, and length.
-  - **Output:** URL of the uploaded image.
+### Profile API (`/api/v1/profiles`)
 
-### `AzureImageStorageClient.java`
-#### Overview
-Azure-based implementation of the `ImageStorageClient` interface.
+| Method   | Endpoint             | Description                   |
+| :------- | :------------------- | :---------------------------- |
+| `POST`   | `/`                  | Create a new profile.         |
+| `GET`    | `/`                  | Get all profiles.             |
+| `GET`    | `/{username}`        | Get a profile by username.    |
+| `PUT`    | `/{username}/update` | Update a profile.             |
+| `POST`   | `/follow`            | Follow a user.                |
 
-#### Methods
-- `UploadImage(String containerName, String originalImageName, InputStream data, long length)`: Uploads an image to an Azure Blob Storage container.
-  - **Input:** Container name, image name, input stream, and length.
-  - **Output:** Blob URL.
-  - **Details:** Generates a unique filename and uploads the image, ensuring overwrite protection.
+## Getting Started
 
+To get a local copy up and running, follow these simple steps.
+
+### Prerequisites
+
+*   Java JDK 17 or later
+*   Gradle 7.x or later
+*   MongoDB instance (local or cloud)
+*   Azure Storage Account
+
+### Installation
+
+1.  **Clone the repo**
+    ```sh
+    git clone https://github.com/your_username/your_repository.git
+    ```
+2.  **Navigate to the project directory**
+    ```sh
+    cd unsplash_server
+    ```
+3.  **Configure the application**
+    Open `src/main/resources/application.properties` and update the following properties with your credentials:
+    ```properties
+    # MongoDB Configuration
+    spring.data.mongodb.uri=mongodb://localhost:27017/your_db_name
+
+    # JWT Secret
+    jwt.secret=your_jwt_secret
+
+    # Azure Storage Configuration
+    azure.storage.connection-string=your_azure_storage_connection_string
+    azure.storage.container-name=your_azure_container_name
+    ```
+4.  **Run the application**
+    ```sh
+    ./gradlew bootRun
+    ```
+    The application will be available at `http://localhost:8080`.
 
 ## License
-This project is licensed under the MIT License.
 
-
+Distributed under the MIT License. See `LICENSE` for more information.

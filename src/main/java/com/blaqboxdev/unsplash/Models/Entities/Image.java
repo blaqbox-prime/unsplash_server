@@ -1,9 +1,9 @@
 package com.blaqboxdev.unsplash.Models.Entities;
 
 import lombok.*;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.DocumentReference;
-import org.springframework.data.mongodb.core.mapping.MongoId;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,14 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString
 @Document(collection = "photos")
 public class Image {
     private String label;
 
     private List<String> tags;
 
-    @MongoId
+    @Id
     private String _id;
 
     private String url;
@@ -29,17 +28,17 @@ public class Image {
     @Builder.Default
     private int likes = 0;
 
-    @DocumentReference(collection = "profiles")
-    private Profile user;
+    @Field("profile")
+    private String profile;
 
-    public void increment_likes(){
-        this.likes = this.likes + 1;
-    }
-
-    public void decrement_likes(){
-        if(this.likes != 0){
-            this.likes = this.likes - 1;
-        }
-    }
+//    public void increment_likes(){
+//        this.likes = this.likes + 1;
+//    }
+//
+//    public void decrement_likes(){
+//        if(this.likes != 0){
+//            this.likes = this.likes - 1;
+//        }
+//    }
 
 }

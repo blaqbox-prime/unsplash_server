@@ -9,9 +9,11 @@ import com.blaqboxdev.unsplash.Repositories.ProfileRepository;
 import com.blaqboxdev.unsplash.Repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.repository.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -22,4 +24,7 @@ public interface ProfileService {
     public Profile updateProfile(Profile profile) throws ProfileNotFoundException;
     public Profile getProfileByUsername(String username) throws ProfileNotFoundException;
     public boolean followProfile(FollowRequest request);
+    Profile getProfileByUserId(String userId);
+    Profile getProfileByUser(User user);
+    List<Profile> getAllProfiles();
 }

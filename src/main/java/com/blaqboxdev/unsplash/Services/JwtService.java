@@ -1,4 +1,4 @@
-package com.blaqboxdev.unsplash.Config;
+package com.blaqboxdev.unsplash.Services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

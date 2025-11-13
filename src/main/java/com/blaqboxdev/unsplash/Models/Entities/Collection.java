@@ -4,11 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.DocumentReference;
-import org.springframework.data.mongodb.core.mapping.MongoId;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -19,24 +18,24 @@ import java.util.List;
 @Document(collection = "collections")
 public class Collection {
 
-    @MongoId
+    @Id
     private String _id;
+
     private String author;
     private String title;
 
     @Builder.Default
     private Date dateCreated = new Date();
 
-    @Builder.Default
-    @DocumentReference(collection = "photos")
-    private List<Image> images = new ArrayList<>();
+    @DocumentReference(lazy = true)
+    private List<Image> images;
 
     public void addImage(Image image){
         if(images.contains(image)) return;
         images.add(image);
     }
 
-    public void removeImage(Image image){
-        images.remove(image);
+    public boolean removeImage(Image image){
+        return images.remove(image);
     }
 }

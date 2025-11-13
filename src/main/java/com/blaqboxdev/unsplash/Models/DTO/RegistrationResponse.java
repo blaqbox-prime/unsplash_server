@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AuthenticationResponse {
+public class RegistrationResponse {
     private String token;
-    private ProfileDTO profile;
+    private UserDTO user;
 }
