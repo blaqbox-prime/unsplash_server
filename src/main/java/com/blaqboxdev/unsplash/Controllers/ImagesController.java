@@ -25,7 +25,7 @@ import java.util.List;
 @Slf4j
 @Tag(name = "Images API")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000/", maxAge = 36000)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/v1/images")
 public class ImagesController {
