@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 public class UnsplashApplication {
 
 	public static void main(String[] args) {
-
 		SpringApplication.run(UnsplashApplication.class, args);
 	}
 
