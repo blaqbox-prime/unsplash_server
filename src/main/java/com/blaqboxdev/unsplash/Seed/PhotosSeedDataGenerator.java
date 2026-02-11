@@ -9,6 +9,7 @@ import com.blaqboxdev.unsplash.Repositories.CollectionRepository;
 import com.blaqboxdev.unsplash.Repositories.ImageRepository;
 import com.blaqboxdev.unsplash.Repositories.ProfileRepository;
 import com.blaqboxdev.unsplash.Repositories.UserRepository;
+import com.blaqboxdev.unsplash.Services.Implementations.ImageServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -33,6 +34,9 @@ public class PhotosSeedDataGenerator implements CommandLineRunner {
 
     @Autowired
     private CollectionRepository collectionRepository;
+
+    @Autowired
+    private ImageServiceImp imageService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -163,7 +167,17 @@ public class PhotosSeedDataGenerator implements CommandLineRunner {
         List<Image> photos = generatePhotosSeedData(profileMap);
 
         // Save all photos
-        imageRepository.saveAll(photos);
+        List<Image> savedImages = imageRepository.saveAll(photos);
+
+            savedImages.forEach(img -> {
+                try {
+                    imageService.generateImageThumbnail(img.get_id());
+                } catch (Exception e) {
+                    System.out.println("Failed for generate thumbnail. Skipped.");
+                    System.out.println(e);
+                }
+            });
+
 
         System.out.println("Successfully generated and saved " + photos.size() + " photos!");
         printDistributionStats(photos);
