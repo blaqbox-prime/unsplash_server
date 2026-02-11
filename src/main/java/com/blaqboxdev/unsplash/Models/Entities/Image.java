@@ -22,6 +22,7 @@ public class Image {
     private String _id;
 
     private String url;
+    private String thumbnail;
 
     private LocalDateTime date_added;
 

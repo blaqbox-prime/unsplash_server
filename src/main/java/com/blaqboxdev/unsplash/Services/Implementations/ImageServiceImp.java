@@ -8,12 +8,23 @@ import com.blaqboxdev.unsplash.Models.Entities.Profile;
 import com.blaqboxdev.unsplash.Repositories.ImageRepository;
 import com.blaqboxdev.unsplash.Repositories.ProfileRepository;
 import com.blaqboxdev.unsplash.Services.ImageService;
+
+import com.blaqboxdev.unsplash.utils.ImageUtils;
+import com.blaqboxdev.unsplash.utils.ThumbnailGenerator;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import net.coobird.thumbnailator.util.ThumbnailatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -85,4 +96,35 @@ public class ImageServiceImp implements ImageService {
                 .filter(image -> image.getProfile().equals(profile.get_id()))
                 .toList();
     }
+
+
+    public Image generateImageThumbnail(String id) throws Exception {
+        Image image = imageRepository.findById(id).orElseThrow(() -> new ImageNotFoundException("image not found. Failed to generate thumbnail"));
+
+        // ------------------------------
+        // 1. Download image to temp file
+        // ------------------------------
+        Path tempOriginal = ImageUtils.downloadImageToTemp(image.getUrl());
+        System.out.println(tempOriginal);
+
+        byte[] thumbBytes = ThumbnailGenerator.createThumbnail(tempOriginal.toFile(), 480, 600);
+
+
+        // 2. Upload to Azure Blob Storage
+        String thumbnailFileName = "thumb_" + image.get_id() + ".jpg";
+
+        String thumbnailUrl = storageService.uploadBytes(
+                thumbnailFileName,
+                thumbBytes,
+                "image/jpeg"
+        );
+
+        Files.deleteIfExists(tempOriginal);
+
+        // 3. Save thumbnail URL in MongoDB
+        image.setThumbnail(thumbnailUrl);
+        return imageRepository.save(image);
+    }
+
+
 }
